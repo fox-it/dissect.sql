@@ -4,6 +4,16 @@ A Dissect module implementing a parsers for the SQLite database file format, com
 configuration data. For more information, please see [the
 documentation](https://dissect.readthedocs.io/en/latest/projects/dissect.sql).
 
+## Installation
+
+`dissect.sql` is available on [PyPI](https://pypi.org/project/dissect.sql/).
+
+```bash
+pip install dissect.sql
+```
+
+This module is also automatically installed if you install the `dissect` package.
+
 ## Build and test instructions
 
 This project uses `tox` to build source and wheel distributions. Run the following command from the root folder to build
