@@ -450,7 +450,6 @@ class WAL:
         return WALFrame(self, offset)
 
     def frames(self):
-
         frame_idx = 0
         while True:
             try:
