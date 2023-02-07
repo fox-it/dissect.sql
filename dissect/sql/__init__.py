@@ -7,8 +7,7 @@ from dissect.sql.exceptions import (
     NoCellData,
     NoWriteAheadLog,
 )
-from dissect.sql.sqlite3 import SQLite3, WAL
-
+from dissect.sql.sqlite3 import WAL, SQLite3
 
 __all__ = [
     "SQLite3",
