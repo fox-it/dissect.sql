@@ -1,27 +1,38 @@
 import re
-from typing import Optional, Tuple
+from typing import Iterator, Optional, Tuple
 
 from dissect.sql.exceptions import InvalidSQL
 
 
-def split_sql_list(sql):
+def split_sql_list(sql: str) -> Iterator[str]:
     """Split a string on comma's (`,') while ignoring any comma's contained
     within an arbitrary level of nested braces (`( )')
     """
     level = 0
+    comment = 0
     line_buf = ""
+
     for char in sql:
-        if char == "(":
-            level += 1
-            line_buf += char
-        elif char == ")":
-            level -= 1
-            line_buf += char
-        elif char == "," and level == 0:
-            yield line_buf.strip()
-            line_buf = ""
-        else:
-            line_buf += char
+        if char == "-" and comment != 2:
+            comment += 1
+        elif comment == 2 and char == "\n":
+            comment = 0
+        elif comment != 2:
+            if comment == 1:
+                line_buf += "-"
+                comment = 0
+
+            if char == "(":
+                level += 1
+                line_buf += char
+            elif char == ")":
+                level -= 1
+                line_buf += char
+            elif char == "," and level == 0:
+                yield line_buf.strip()
+                line_buf = ""
+            else:
+                line_buf += char
 
     if level != 0:
         bracket_type = "(" if level < 0 else ")"
@@ -31,7 +42,7 @@ def split_sql_list(sql):
         yield line_buf.strip()
 
 
-def parse_table_columns_constraints(sql):
+def parse_table_columns_constraints(sql: str) -> tuple[Optional[str], list[str], list[str]]:
     """Parse SQL CREATE TABLE statements and return the primary key, column
     definitions and table constraints.
 
@@ -61,7 +72,7 @@ def parse_table_columns_constraints(sql):
             f"Not a valid CREATE TABLE definition: no column definitions or table constraints found in {sql!r}"
         )
 
-    for column_def in split_sql_list(column_sql.groups()[0]):
+    for i, column_def in enumerate(split_sql_list(column_sql.groups()[0])):
         column_name, column_type_constraint = split_column_def(sql, column_def)
 
         if column_name.upper() == "PRIMARY":
