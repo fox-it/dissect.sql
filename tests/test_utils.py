@@ -93,6 +93,18 @@ testdata = [
             [],
         ),
     ),
+    (
+        'CREATE TABLE foo (\n  "column-1",\n  "column--2",\n  "column-`-\'-3")',
+        (
+            None,
+            [
+                ("column-1", ""),
+                ("column--2", ""),
+                ("column-`-'-3", ""),
+            ],
+            [],
+        ),
+    ),
 ]
 
 

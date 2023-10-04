@@ -10,10 +10,11 @@ def split_sql_list(sql: str) -> Iterator[str]:
     """
     level = 0
     comment = 0
+    quote = {'"': False, "'": False, "`": False}
     line_buf = ""
 
     for char in sql:
-        if char == "-" and comment != 2:
+        if not any(quote.values()) and char == "-" and comment != 2:
             comment += 1
         elif comment == 2 and char == "\n":
             comment = 0
@@ -32,6 +33,8 @@ def split_sql_list(sql: str) -> Iterator[str]:
                 yield line_buf.strip()
                 line_buf = ""
             else:
+                if char in quote.keys():
+                    quote[char] = not quote[char]
                 line_buf += char
 
     if level != 0:
@@ -72,7 +75,7 @@ def parse_table_columns_constraints(sql: str) -> tuple[Optional[str], list[str],
             f"Not a valid CREATE TABLE definition: no column definitions or table constraints found in {sql!r}"
         )
 
-    for i, column_def in enumerate(split_sql_list(column_sql.groups()[0])):
+    for column_def in split_sql_list(column_sql.groups()[0]):
         column_name, column_type_constraint = split_column_def(sql, column_def)
 
         if column_name.upper() == "PRIMARY":
@@ -106,6 +109,9 @@ def split_column_def(sql: str, column_def: str) -> Tuple[str, str]:
 
     column_name = column_parts[0]
     column_type_constraint = column_parts[1] if len(column_parts) > 1 else ""
+
+    if column_name[0] in ('"', "'", "`"):
+        column_name = column_name[1:-1]
 
     return column_name, column_type_constraint
 
