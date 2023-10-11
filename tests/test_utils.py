@@ -94,7 +94,7 @@ testdata = [
         ),
     ),
     (
-        'CREATE TABLE foo (\n  "column-1",\n  "column--2",\n  "column-`-\'-3")',
+        'CREATE TABLE foo (\n  "column-1",\n  "column--2", -- comment\n  "column-`-\'-3" -- comment, "column-\\"4"\n)',
         (
             None,
             [

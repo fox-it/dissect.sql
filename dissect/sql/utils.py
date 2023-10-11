@@ -10,11 +10,11 @@ def split_sql_list(sql: str) -> Iterator[str]:
     """
     level = 0
     comment = 0
-    quote = {'"': False, "'": False, "`": False}
+    quote = None
     line_buf = ""
 
     for char in sql:
-        if not any(quote.values()) and char == "-" and comment != 2:
+        if not quote and char == "-" and comment != 2:
             comment += 1
         elif comment == 2 and char == "\n":
             comment = 0
@@ -33,8 +33,11 @@ def split_sql_list(sql: str) -> Iterator[str]:
                 yield line_buf.strip()
                 line_buf = ""
             else:
-                if char in quote.keys():
-                    quote[char] = not quote[char]
+                if char in ('"', "'", "`"):
+                    if not quote:
+                        quote = char
+                    elif char == quote:
+                        quote = None
                 line_buf += char
 
     if level != 0:
