@@ -1,27 +1,44 @@
 import re
-from typing import Optional, Tuple
+from typing import Iterator, Optional, Tuple
 
 from dissect.sql.exceptions import InvalidSQL
 
 
-def split_sql_list(sql):
+def split_sql_list(sql: str) -> Iterator[str]:
     """Split a string on comma's (`,') while ignoring any comma's contained
     within an arbitrary level of nested braces (`( )')
     """
     level = 0
+    comment = 0
+    quote = None
     line_buf = ""
+
     for char in sql:
-        if char == "(":
-            level += 1
-            line_buf += char
-        elif char == ")":
-            level -= 1
-            line_buf += char
-        elif char == "," and level == 0:
-            yield line_buf.strip()
-            line_buf = ""
-        else:
-            line_buf += char
+        if not quote and char == "-" and comment != 2:
+            comment += 1
+        elif comment == 2 and char == "\n":
+            comment = 0
+        elif comment != 2:
+            if comment == 1:
+                line_buf += "-"
+                comment = 0
+
+            if char == "(":
+                level += 1
+                line_buf += char
+            elif char == ")":
+                level -= 1
+                line_buf += char
+            elif char == "," and level == 0:
+                yield line_buf.strip()
+                line_buf = ""
+            else:
+                if char in ('"', "'", "`"):
+                    if not quote:
+                        quote = char
+                    elif char == quote:
+                        quote = None
+                line_buf += char
 
     if level != 0:
         bracket_type = "(" if level < 0 else ")"
@@ -31,7 +48,7 @@ def split_sql_list(sql):
         yield line_buf.strip()
 
 
-def parse_table_columns_constraints(sql):
+def parse_table_columns_constraints(sql: str) -> tuple[Optional[str], list[str], list[str]]:
     """Parse SQL CREATE TABLE statements and return the primary key, column
     definitions and table constraints.
 
@@ -95,6 +112,9 @@ def split_column_def(sql: str, column_def: str) -> Tuple[str, str]:
 
     column_name = column_parts[0]
     column_type_constraint = column_parts[1] if len(column_parts) > 1 else ""
+
+    if column_name[0] in ('"', "'", "`"):
+        column_name = column_name[1:-1]
 
     return column_name, column_type_constraint
 

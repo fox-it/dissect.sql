@@ -82,9 +82,32 @@ testdata = [
             ],
         ),
     ),
+    (
+        "CREATE TABLE something (\n  column1, -- comment\n  column2\n)",
+        (
+            None,
+            [
+                ("column1", ""),
+                ("column2", ""),
+            ],
+            [],
+        ),
+    ),
+    (
+        'CREATE TABLE foo (\n  "column-1",\n  "column--2", -- comment\n  "column-`-\'-3" -- comment, "column-\\"4"\n)',
+        (
+            None,
+            [
+                ("column-1", ""),
+                ("column--2", ""),
+                ("column-`-'-3", ""),
+            ],
+            [],
+        ),
+    ),
 ]
 
 
 @pytest.mark.parametrize("sql, result", testdata)
-def test_parse_table_columns_constraints(sql, result):
+def test_parse_table_columns_constraints(sql: str, result: tuple) -> None:
     assert parse_table_columns_constraints(sql) == result
