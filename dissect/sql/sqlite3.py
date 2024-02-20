@@ -28,6 +28,8 @@ class SQLite3:
         self.fh = fh
         self.wal = WAL(wal_fh) if wal_fh else None
 
+        self.page = lru_cache(maxsize=256)(self.page)
+
         self.header = c_sqlite3.header(fh)
         if self.header.magic != SQLITE3_HEADER_MAGIC:
             raise InvalidDatabase("Invalid header magic")
@@ -81,7 +83,6 @@ class SQLite3:
             self.fh.seek((num - 1) * self.page_size)
         return self.fh.read(self.header.page_size)
 
-    @lru_cache(maxsize=256)
     def page(self, num):
         return Page(self, num)
 
@@ -277,6 +278,8 @@ class Page:
         self.sqlite = sqlite
         self.num = num
 
+        self.cell = lru_cache(maxsize=256)(self.cell)
+
         self.data = sqlite.raw_page(num)
         self.offset = (num - 1) * sqlite.page_size
         buf = memoryview(self.data)
@@ -305,7 +308,6 @@ class Page:
     def open(self):
         return BytesIO(self.data)
 
-    @lru_cache(maxsize=256)
     def cell(self, num):
         if num >= self.header.cell_count or num < 0:
             raise IndexError("Invalid cell number")
@@ -437,13 +439,14 @@ class WAL:
         self.fh = fh
         self.header = c_sqlite3.wal_header(fh)
 
+        self.frame = lru_cache(maxsize=1024)(self.frame)
+
         if self.header.magic not in WAL_HEADER_MAGIC:
             raise InvalidDatabase("Invalid header magic")
 
         self.checksum_endian = "<" if self.header.magic == WAL_HEADER_MAGIC_LE else ">"
         self._checkpoints = None
 
-    @lru_cache(maxsize=1024)
     def frame(self, frame_idx):
         frame_size = len(c_sqlite3.wal_frame) + self.header.page_size
         offset = len(c_sqlite3.wal_header) + frame_idx * frame_size
