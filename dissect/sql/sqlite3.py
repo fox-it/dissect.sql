@@ -28,8 +28,6 @@ class SQLite3:
         self.fh = fh
         self.wal = WAL(wal_fh) if wal_fh else None
 
-        self.page = lru_cache(maxsize=256)(self.page)
-
         self.header = c_sqlite3.header(fh)
         if self.header.magic != SQLITE3_HEADER_MAGIC:
             raise InvalidDatabase("Invalid header magic")
@@ -42,6 +40,8 @@ class SQLite3:
         self.usable_page_size = self.page_size - self.header.reserved_size
         if self.usable_page_size < 480:
             raise InvalidDatabase("Usable page size is too small")
+
+        self.page = lru_cache(256)(self.page)
 
     def open_wal(self, fh):
         self.wal = WAL(fh)
@@ -278,8 +278,6 @@ class Page:
         self.sqlite = sqlite
         self.num = num
 
-        self.cell = lru_cache(maxsize=256)(self.cell)
-
         self.data = sqlite.raw_page(num)
         self.offset = (num - 1) * sqlite.page_size
         buf = memoryview(self.data)
@@ -300,6 +298,8 @@ class Page:
             fp += 4
 
         self.cell_pointers = c_sqlite3.uint16[self.header.cell_count](buf[fp : fp + (self.header.cell_count * 2)])
+
+        self.cell = lru_cache(256)(self.cell)
 
     def __repr__(self):
         page_type = PAGE_TYPES[self.header.flags]
@@ -439,13 +439,13 @@ class WAL:
         self.fh = fh
         self.header = c_sqlite3.wal_header(fh)
 
-        self.frame = lru_cache(maxsize=1024)(self.frame)
-
         if self.header.magic not in WAL_HEADER_MAGIC:
             raise InvalidDatabase("Invalid header magic")
 
         self.checksum_endian = "<" if self.header.magic == WAL_HEADER_MAGIC_LE else ">"
         self._checkpoints = None
+
+        self.frame = lru_cache(1024)(self.frame)
 
     def frame(self, frame_idx):
         frame_size = len(c_sqlite3.wal_frame) + self.header.page_size
