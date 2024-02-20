@@ -41,6 +41,8 @@ class SQLite3:
         if self.usable_page_size < 480:
             raise InvalidDatabase("Usable page size is too small")
 
+        self.page = lru_cache(256)(self.page)
+
     def open_wal(self, fh):
         self.wal = WAL(fh)
 
@@ -81,7 +83,6 @@ class SQLite3:
             self.fh.seek((num - 1) * self.page_size)
         return self.fh.read(self.header.page_size)
 
-    @lru_cache(maxsize=256)
     def page(self, num):
         return Page(self, num)
 
@@ -298,6 +299,8 @@ class Page:
 
         self.cell_pointers = c_sqlite3.uint16[self.header.cell_count](buf[fp : fp + (self.header.cell_count * 2)])
 
+        self.cell = lru_cache(256)(self.cell)
+
     def __repr__(self):
         page_type = PAGE_TYPES[self.header.flags]
         return f"<Page num={self.num} type={page_type} offset=0x{self.offset:x}>"
@@ -305,7 +308,6 @@ class Page:
     def open(self):
         return BytesIO(self.data)
 
-    @lru_cache(maxsize=256)
     def cell(self, num):
         if num >= self.header.cell_count or num < 0:
             raise IndexError("Invalid cell number")
@@ -443,7 +445,8 @@ class WAL:
         self.checksum_endian = "<" if self.header.magic == WAL_HEADER_MAGIC_LE else ">"
         self._checkpoints = None
 
-    @lru_cache(maxsize=1024)
+        self.frame = lru_cache(1024)(self.frame)
+
     def frame(self, frame_idx):
         frame_size = len(c_sqlite3.wal_frame) + self.header.page_size
         offset = len(c_sqlite3.wal_header) + frame_idx * frame_size
