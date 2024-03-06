@@ -590,7 +590,10 @@ def read_record(fh, encoding):
             if type_ % 2 == 0:
                 val = fh.read((type_ - 12) // 2)
             else:
-                val = fh.read((type_ - 13) // 2).decode(encoding)
+                try:
+                    val = fh.read((type_ - 13) // 2).decode(encoding)
+                except UnicodeDecodeError as e:
+                    val = e.object
 
         values.append(val)
 
