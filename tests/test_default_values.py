@@ -44,7 +44,9 @@ def test_parse_table_defaults():
             new_test DEFAULT (1),
             extra_test DEFAULT ("hello world"),
             all_tests DEFAULT (-1.1),
-            test DEFAULT (x == NULL)
+            test DEFAULT (x == NULL),
+            some_test INTEGER DEFAULT (0) NOT NULL,
+            another_test VARCHAR(1337) DEFAULT ("test") NOT NULL
         );
     """
     table = Table(sqlite=None, type_=None, name=None, table_name=None, page=None, sql=table_definition)
@@ -57,6 +59,8 @@ def test_parse_table_defaults():
         ("extra_test", "hello world"),
         ("all_tests", -1.1),
         ("test", None),
+        ("some_test", 0),
+        ("another_test", "test"),
     ]
     for key, value in assertion_data:
         assert column_name_for_key(table.columns, key).default_value == value

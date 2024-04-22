@@ -75,7 +75,7 @@ class SQLite3:
             yield Index(self, *cell.values)
 
     def raw_page(self, num):
-        if num < 1 or num > self.header.page_count:
+        if (num < 1 or num > self.header.page_count) and self.header.page_count > 0:
             raise InvalidPageNumber("Page number exceeds boundaries")
         elif num == 1:  # Page 1 is root
             self.fh.seek(len(c_sqlite3.header))
@@ -100,8 +100,8 @@ class Column:
     """Describes a column of a sqlite table."""
 
     SPACE = r"\s"
-    EXPRESSION = r"\(.+\)"
-    STRING = r"['\"].+['\"]"
+    EXPRESSION = r"\(.+?\)"
+    STRING = r"['\"].+?['\"]"
     TOKENIZER_EXPRESSION = re.compile(f"({SPACE}|{EXPRESSION}|{STRING})")
 
     def __init__(self, name: str, description: str):
