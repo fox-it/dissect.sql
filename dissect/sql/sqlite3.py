@@ -32,7 +32,7 @@ class SQLite3:
         if self.header.magic != SQLITE3_HEADER_MAGIC:
             raise InvalidDatabase("Invalid header magic")
 
-        self.encoding = ENCODING[self.header.text_encoding]
+        self.encoding = ENCODING.get(self.header.text_encoding, "utf-8")
         self.page_size = self.header.page_size
         if self.page_size == 1:
             self.page_size = 65536
@@ -75,7 +75,9 @@ class SQLite3:
             yield Index(self, *cell.values)
 
     def raw_page(self, num):
-        if num < 1 or num > self.header.page_count:
+        # Only throw an out of bounds exception if the header contains a page_count.
+        # Some old versions of SQLite3 do not set/update the page_count correctly.
+        if (num < 1 or num > self.header.page_count) and self.header.page_count > 0:
             raise InvalidPageNumber("Page number exceeds boundaries")
         elif num == 1:  # Page 1 is root
             self.fh.seek(len(c_sqlite3.header))
@@ -100,8 +102,8 @@ class Column:
     """Describes a column of a sqlite table."""
 
     SPACE = r"\s"
-    EXPRESSION = r"\(.+\)"
-    STRING = r"['\"].+['\"]"
+    EXPRESSION = r"\(.+?\)"
+    STRING = r"['\"].+?['\"]"
     TOKENIZER_EXPRESSION = re.compile(f"({SPACE}|{EXPRESSION}|{STRING})")
 
     def __init__(self, name: str, description: str):

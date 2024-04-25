@@ -51,3 +51,10 @@ def test_sqlite(sqlite_db: BinaryIO) -> None:
 )
 def test_sqlite_read_record(input: bytes, encoding: str, expected_output: tuple[list[int], list[Any]]) -> None:
     assert sqlite3.read_record(BytesIO(input), encoding) == expected_output
+
+
+def test_empty(empty_db: BinaryIO) -> None:
+    s = sqlite3.SQLite3(empty_db)
+
+    assert s.encoding == "utf-8"
+    assert len(list(s.tables())) == 0
