@@ -32,7 +32,7 @@ class SQLite3:
         if self.header.magic != SQLITE3_HEADER_MAGIC:
             raise InvalidDatabase("Invalid header magic")
 
-        self.encoding = ENCODING[self.header.text_encoding]
+        self.encoding = ENCODING.get(self.header.text_encoding, "utf-8")
         self.page_size = self.header.page_size
         if self.page_size == 1:
             self.page_size = 65536
