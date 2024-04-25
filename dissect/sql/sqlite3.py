@@ -75,6 +75,8 @@ class SQLite3:
             yield Index(self, *cell.values)
 
     def raw_page(self, num):
+        # Only throw an out of bounds exception if the header contains a page_count.
+        # Some old versions of SQLite3 do not set/update the page_count correctly.
         if (num < 1 or num > self.header.page_count) and self.header.page_count > 0:
             raise InvalidPageNumber("Page number exceeds boundaries")
         elif num == 1:  # Page 1 is root
