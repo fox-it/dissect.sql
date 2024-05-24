@@ -1,4 +1,4 @@
-from dissect import cstruct
+from dissect.cstruct import cstruct
 
 sqlite3_def = """
 #define PAGE_FLAG_INTKEY      0x01
@@ -66,8 +66,7 @@ struct wal_frame {
 };
 """
 
-c_sqlite3 = cstruct.cstruct(endian=">")
-c_sqlite3.load(sqlite3_def)
+c_sqlite3 = cstruct(endian=">").load(sqlite3_def)
 
 ENCODING = {
     1: "utf-8",
