@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from io import BytesIO
 from typing import Any, BinaryIO
 
@@ -43,7 +45,7 @@ def test_sqlite(sqlite_db: BinaryIO) -> None:
 
 
 @pytest.mark.parametrize(
-    "input, encoding, expected_output",
+    ("input", "encoding", "expected_output"),
     [
         (b"\x04\x00\x1b\x02testing\x059", "utf-8", ([0, 27, 2], [None, "testing", 1337])),
         (b"\x02\x65\x80\x81\x82\x83", "utf-8", ([101], [b"\x80\x81\x82\x83"])),
