@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 from unittest.mock import Mock
 
 from dissect.sql.sqlite3 import Column, Row
 
 
-def test_row_filled_with_defaults():
+def test_row_filled_with_defaults() -> None:
     mocked_table = Mock()
     mocked_table.columns = [
         Column("test", "DEFAULT 1"),
@@ -19,7 +21,7 @@ def test_row_filled_with_defaults():
     assert result_row.get("test3") == "hello people"
 
 
-def test_row_more_cells():
+def test_row_more_cells() -> None:
     mocked_table = Mock()
     mocked_table.columns = [
         Column("test", "DEFAULT 1"),

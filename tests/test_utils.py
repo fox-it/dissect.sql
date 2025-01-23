@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pytest
 
 from dissect.sql.utils import parse_table_columns_constraints
@@ -108,6 +110,6 @@ testdata = [
 ]
 
 
-@pytest.mark.parametrize("sql, result", testdata)
+@pytest.mark.parametrize(("sql", "result"), testdata)
 def test_parse_table_columns_constraints(sql: str, result: tuple) -> None:
     assert parse_table_columns_constraints(sql) == result

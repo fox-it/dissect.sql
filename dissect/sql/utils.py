@@ -1,7 +1,12 @@
+from __future__ import annotations
+
 import re
-from typing import Iterator, Optional, Tuple
+from typing import TYPE_CHECKING
 
 from dissect.sql.exceptions import InvalidSQL
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 def split_sql_list(sql: str) -> Iterator[str]:
@@ -48,7 +53,7 @@ def split_sql_list(sql: str) -> Iterator[str]:
         yield line_buf.strip()
 
 
-def parse_table_columns_constraints(sql: str) -> tuple[Optional[str], list[str], list[str]]:
+def parse_table_columns_constraints(sql: str) -> tuple[str | None, list[str], list[str]]:
     """Parse SQL CREATE TABLE statements and return the primary key, column
     definitions and table constraints.
 
@@ -103,7 +108,7 @@ def parse_table_columns_constraints(sql: str) -> tuple[Optional[str], list[str],
     return primary_key, columns, table_constraints
 
 
-def split_column_def(sql: str, column_def: str) -> Tuple[str, str]:
+def split_column_def(sql: str, column_def: str) -> tuple[str, str]:
     """Splits the column definition to name and constraint."""
 
     column_parts = column_def.split(maxsplit=1)
@@ -119,7 +124,7 @@ def split_column_def(sql: str, column_def: str) -> Tuple[str, str]:
     return column_name, column_type_constraint
 
 
-def get_primary_key_from_constraint(column_type_constraint: str, column_def: str, sql: str) -> Optional[str]:
+def get_primary_key_from_constraint(column_type_constraint: str, column_def: str, sql: str) -> str | None:
     """Finds a primary key from sql string."""
     primary_key = None
 
@@ -129,7 +134,7 @@ def get_primary_key_from_constraint(column_type_constraint: str, column_def: str
             f"Not a valid CREATE TABLE definition: invalid PRIMARY KEY table constraint {column_def!r} in {sql!r}"
         )
     matched_group = primary_key_sql.groups()[0]
-    primary_key_defs = [key_def for key_def in split_sql_list(matched_group)]
+    primary_key_defs = list(split_sql_list(matched_group))
     # We only handle single primary keys, no compound keys or
     # expressions, so a single entry in the list consisting of a single
     # part.
