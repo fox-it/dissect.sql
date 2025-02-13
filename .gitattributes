@@ -1,0 +1,2 @@
+# tests/_data/** filter=lfs diff=lfs merge=lfs -text
+# we cannot push lfs objects as we do not have permission

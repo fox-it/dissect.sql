@@ -10,8 +10,8 @@ if TYPE_CHECKING:
 
 
 def split_sql_list(sql: str) -> Iterator[str]:
-    """Split a string on comma's (`,') while ignoring any comma's contained
-    within an arbitrary level of nested braces (`( )')
+    """Split a string on comma's (``,``) while ignoring any comma's contained
+    within an arbitrary level of nested braces (``( )``)
     """
     level = 0
     comment = 0
