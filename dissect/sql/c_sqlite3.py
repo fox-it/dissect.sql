@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dissect.cstruct import cstruct
 
+# Resource: https://www.sqlite.org/fileformat.html
 sqlite3_def = """
 #define PAGE_FLAG_INTKEY      0x01
 #define PAGE_FLAG_ZERODATA    0x02

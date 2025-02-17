@@ -16,9 +16,9 @@ def open_data(name: str) -> Iterator[BinaryIO]:
 
 @pytest.fixture
 def sqlite_db() -> Iterator[BinaryIO]:
-    yield from open_data("data/test.sqlite")
+    yield from open_data("_data/test.sqlite")
 
 
 @pytest.fixture
 def empty_db() -> Iterator[BinaryIO]:
-    yield from open_data("data/empty.sqlite")
+    yield from open_data("_data/empty.sqlite")
