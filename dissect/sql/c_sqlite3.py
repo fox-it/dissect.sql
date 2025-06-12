@@ -84,6 +84,7 @@ PAGE_TYPES = {
     c_sqlite3.PAGE_TYPE_LEAF_TABLE: "PAGE_TYPE_LEAF_TABLE",
 }
 
+# See https://www.sqlite.org/fileformat.html -- Record format
 SERIAL_TYPES = {
     0: lambda fh: None,
     1: c_sqlite3.int8,
