@@ -25,7 +25,7 @@ def test_sqlite(sqlite_db: BinaryIO) -> None:
     assert s.table("test").__dict__ == table.__dict__
 
     rows = list(table.rows())
-    assert len(rows) == 4
+    assert len(rows) == 5
     assert rows[0].id == 1
     assert rows[0].name == "testing"
     assert rows[0].value == 1337
@@ -38,6 +38,9 @@ def test_sqlite(sqlite_db: BinaryIO) -> None:
     assert rows[3].id == 4
     assert rows[3].name == "B" * 4100
     assert rows[3].value == 4100
+    assert rows[4].id == 5
+    assert rows[4].name == "negative"
+    assert rows[4].value == -11644473429
 
     assert len(rows) == len(list(table))
     assert table.row(0).__dict__ == rows[0].__dict__
