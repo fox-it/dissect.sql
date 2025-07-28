@@ -107,6 +107,18 @@ testdata = [
             [],
         ),
     ),
+    (
+        "CREATE TABLE TableName (Id INTEGER PRIMARY KEY, UniqueKey TEXT NOT NULL UNIQUE, Name TEXT NOT NULL)",
+        (
+            "Id",
+            [
+                ("Id", "INTEGER PRIMARY KEY"),
+                ("UniqueKey", "TEXT NOT NULL UNIQUE"),
+                ("Name", "TEXT NOT NULL"),
+            ],
+            [],
+        ),
+    ),
 ]
 
 
