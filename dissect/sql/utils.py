@@ -91,7 +91,7 @@ def parse_table_columns_constraints(sql: str) -> tuple[str | None, list[str], li
         elif "PRIMARY KEY" in column_type_constraint.upper():
             primary_key = column_name
 
-        if column_name.upper().startswith(
+        if "(" in column_def and column_name.upper().startswith(
             (
                 "CONSTRAINT",
                 "UNIQUE",
