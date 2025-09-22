@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from dissect.database.sqlite3.utils import parse_table_columns_constraints
+from dissect.database.sqlite3.util import parse_table_columns_constraints
 
 testdata = [
     (

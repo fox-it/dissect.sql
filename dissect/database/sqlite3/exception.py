@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dissect.database.exceptions import Error
+from dissect.database.exception import Error
 
 
 class InvalidDatabase(Error):

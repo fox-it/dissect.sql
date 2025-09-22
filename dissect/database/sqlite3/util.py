@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from typing import TYPE_CHECKING
 
-from dissect.database.sqlite3.exceptions import InvalidSQL
+from dissect.database.sqlite3.exception import InvalidSQL
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

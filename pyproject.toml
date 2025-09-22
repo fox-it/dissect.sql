@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dissect.database"
-description = "A Dissect module implementing a parsers for the SQLite database file format, commonly used by applications to store configuration data"
+description = "A Dissect module implementing parsers for various database formats, including SQLite3."
 readme = "README.md"
 requires-python = "~=3.9"
 license.text = "Affero General Public License v3"

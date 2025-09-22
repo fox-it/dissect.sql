@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dissect.database.sqlite3.exceptions import (
+from dissect.database.sqlite3.exception import (
     Error,
     InvalidDatabase,
     InvalidPageNumber,

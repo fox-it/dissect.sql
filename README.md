@@ -1,8 +1,8 @@
-# dissect.sql
+# dissect.database
 
 A Dissect module implementing a parsers for the SQLite database file format, commonly used by applications to store
 configuration data. For more information, please see [the
-documentation](https://docs.dissect.tools/en/latest/projects/dissect.sql/index.html).
+documentation](https://docs.dissect.tools/en/latest/projects/dissect.database/index.html).
 
 ## Requirements
 
@@ -12,10 +12,10 @@ Information on the supported Python versions can be found in the Getting Started
 
 ## Installation
 
-`dissect.sql` is available on [PyPI](https://pypi.org/project/dissect.sql/).
+`dissect.database` is available on [PyPI](https://pypi.org/project/dissect.database/).
 
 ```bash
-pip install dissect.sql
+pip install dissect.database
 ```
 
 This module is also automatically installed if you install the `dissect` package.

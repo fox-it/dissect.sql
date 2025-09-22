@@ -16,13 +16,13 @@ from dissect.database.sqlite3.c_sqlite3 import (
     WAL_HEADER_MAGIC_LE,
     c_sqlite3,
 )
-from dissect.database.sqlite3.exceptions import (
+from dissect.database.sqlite3.exception import (
     InvalidDatabase,
     InvalidPageNumber,
     InvalidPageType,
     NoCellData,
 )
-from dissect.database.sqlite3.utils import parse_table_columns_constraints
+from dissect.database.sqlite3.util import parse_table_columns_constraints
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
