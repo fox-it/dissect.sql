@@ -1,4 +1,6 @@
-from dissect.sql.exceptions import (
+from __future__ import annotations
+
+from dissect.database.sqlite3.exceptions import (
     Error,
     InvalidDatabase,
     InvalidPageNumber,
@@ -7,10 +9,11 @@ from dissect.sql.exceptions import (
     NoCellData,
     NoWriteAheadLog,
 )
-from dissect.sql.sqlite3 import WAL, SQLite3
+from dissect.database.sqlite3.sqlite3 import WAL, Column, Row, SQLite3, Table
 
 __all__ = [
     "WAL",
+    "Column",
     "Error",
     "InvalidDatabase",
     "InvalidPageNumber",
@@ -18,5 +21,7 @@ __all__ = [
     "InvalidSQL",
     "NoCellData",
     "NoWriteAheadLog",
+    "Row",
     "SQLite3",
+    "Table",
 ]

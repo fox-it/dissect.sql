@@ -7,7 +7,7 @@ from functools import lru_cache
 from io import BytesIO
 from typing import TYPE_CHECKING, Any, BinaryIO
 
-from dissect.sql.c_sqlite3 import (
+from dissect.database.sqlite3.c_sqlite3 import (
     ENCODING,
     PAGE_TYPES,
     SERIAL_TYPES,
@@ -16,13 +16,13 @@ from dissect.sql.c_sqlite3 import (
     WAL_HEADER_MAGIC_LE,
     c_sqlite3,
 )
-from dissect.sql.exceptions import (
+from dissect.database.sqlite3.exceptions import (
     InvalidDatabase,
     InvalidPageNumber,
     InvalidPageType,
     NoCellData,
 )
-from dissect.sql.utils import parse_table_columns_constraints
+from dissect.database.sqlite3.utils import parse_table_columns_constraints
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

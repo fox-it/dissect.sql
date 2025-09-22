@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from dissect.sql.sqlite3 import Column, Table
+from dissect.database.sqlite3 import Column, Table
 
 
 def test_column_default() -> None:

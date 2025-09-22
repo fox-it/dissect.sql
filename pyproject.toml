@@ -3,7 +3,7 @@ requires = ["setuptools>=65.5.0", "setuptools_scm[toml]>=6.4.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dissect.sql"
+name = "dissect.database"
 description = "A Dissect module implementing a parsers for the SQLite database file format, commonly used by applications to store configuration data"
 readme = "README.md"
 requires-python = "~=3.9"
@@ -32,8 +32,8 @@ dynamic = ["version"]
 
 [project.urls]
 homepage = "https://dissect.tools"
-documentation = "https://docs.dissect.tools/en/latest/projects/dissect.sql"
-repository = "https://github.com/fox-it/dissect.sql"
+documentation = "https://docs.dissect.tools/en/latest/projects/dissect.database"
+repository = "https://github.com/fox-it/dissect.database"
 
 [project.optional-dependencies]
 dev = [
@@ -89,7 +89,7 @@ ignore = ["E203", "B904", "UP024", "ANN002", "ANN003", "ANN204", "ANN401", "SIM1
 "tests/docs/**" = ["INP001"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["dissect.sql"]
+known-first-party = ["dissect.database"]
 known-third-party = ["dissect"]
 
 [tool.setuptools]

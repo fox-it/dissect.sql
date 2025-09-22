@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from unittest.mock import Mock
 
-from dissect.sql.sqlite3 import Column, Row
+from dissect.database.sqlite3 import Column, Row
 
 
 def test_row_filled_with_defaults() -> None:

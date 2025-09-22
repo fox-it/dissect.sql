@@ -5,8 +5,8 @@ from typing import Any, BinaryIO
 
 import pytest
 
-from dissect.sql import sqlite3
-from dissect.sql.c_sqlite3 import SQLITE3_HEADER_MAGIC
+from dissect.database.sqlite3 import sqlite3
+from dissect.database.sqlite3.c_sqlite3 import SQLITE3_HEADER_MAGIC
 
 
 def test_sqlite(sqlite_db: BinaryIO) -> None:
