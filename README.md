@@ -4,6 +4,10 @@ A Dissect module implementing a parsers for the SQLite database file format, com
 configuration data. For more information, please see [the
 documentation](https://docs.dissect.tools/en/latest/projects/dissect.sql/index.html).
 
+## Supersession notice
+
+This project has been **superseded** by [`dissect.database`](https://github.com/fox-it/dissect.database), which provides the same functionality along with broader database support.
+
 ## Requirements
 
 This project is part of the Dissect framework and requires Python.
